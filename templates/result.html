@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnosis — PlantCare AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;0,900;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="brandmark"><span class="dot"></span> PlantCare AI</div>
+
+<main class="result-page">
+
+  <div class="result-heading fade-in">
+    <p class="result-eyebrow">Diagnosis Complete</p>
+    <h1>Here's what we found 🌿</h1>
+    <svg class="heading-sprig" viewBox="0 0 68 24" fill="none">
+      <path d="M2 12 C 17 2, 23 22, 34 12 S 51 2, 66 12" stroke="#66BB6A" stroke-width="1.6" stroke-linecap="round"/>
+      <circle cx="34" cy="12" r="2.6" fill="#2F7D43"/>
+    </svg>
+    <p>Review the prediction, then follow the treatment and prevention steps below.</p>
+  </div>
+
+  <div class="result-grid">
+
+    <!-- Uploaded image -->
+    <div class="result-image-card fade-in delay-1">
+      <img src="{{ url_for('uploaded_file', filename=image_file) }}" alt="Uploaded leaf image">
+      <p class="result-image-caption">Uploaded leaf image</p>
+    </div>
+
+    <!-- Prediction card -->
+    <div class="prediction-card fade-in delay-2">
+
+      <p class="disease-eyebrow">Predicted Condition</p>
+      <h2 class="disease-name">{{ disease }}</h2>
+
+      <div class="confidence-block">
+    <div class="confidence-label">
+        <span>Confidence</span>
+        <span class="value">{{ confidence }}%</span>
+    </div>
+    <div class="confidence-track">
+        <div class="confidence-fill" data-target="{{ confidence }}" style="width: 0%;"></div>
+    </div>
+</div>
+
+<div class="confidence-badge">
+    {{ confidence_level }}
+</div>
+
+<!-- Top Predictions -->
+<div class="prediction-summary">
+    <h3 class="section-label">🏆 Top Predictions</h3>
+
+    {% for prediction in top_predictions %}
+    <div class="prediction-item">
+        <span>{{ loop.index }}. {{ prediction.disease.replace('_', ' ') }}</span>
+        <strong>{{ prediction.confidence }}%</strong>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="description-block">
+    {{ description }}
+</div>
+
+      <div class="description-block">
+        {{ description }}
+      </div>
+
+      <h3 class="section-label">💊 Treatment</h3>
+      <ul class="checklist">
+        {% for item in treatment %}
+        <li>
+          <span class="check-icon">✓</span>
+          <span>{{ item }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+
+      <h3 class="section-label">🛡️ Prevention</h3>
+      <ul class="checklist">
+        {% for item in prevention %}
+        <li>
+          <span class="shield-icon">🛡</span>
+          <span>{{ item }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+
+    </div>
+
+  </div>
+
+  <div class="analyze-again-wrap fade-in delay-3">
+    <a href="{{ url_for('home') }}" class="btn btn-analyze">Analyze Another Leaf</a>
+  </div>
+
+</main>
+
+<script>
+  // Gently animates the confidence bar from 0 to its Jinja-provided value on load.
+  // Purely presentational — does not touch any Flask data or routes.
+  document.addEventListener('DOMContentLoaded', function () {
+    var fill = document.querySelector('.confidence-fill');
+    if (!fill) return;
+    var target = fill.getAttribute('data-target') || 0;
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        fill.style.width = target + '%';
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
