@@ -11,10 +11,12 @@ __pycache__/
 # VS Code
 .vscode/
 
-# Model files
 *.h5
-*.keras
 *.pt
+
+# Ignore all keras files except the deployed model
+*.keras
+!model/plant_disease_model.keras
 
 # OS files
 .DS_Store
